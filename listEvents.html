@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Events | College Event Management</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eaf2ff, #fff8e6);
+            color: #222;
+        }
+
+        header {
+            background: #123b70;
+            color: white;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h2 { margin: 0; }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        header a:hover { color: #ffd166; }
+
+        .container {
+            max-width: 1200px;
+            margin: 35px auto;
+            padding: 0 18px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #123b70;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .toolbar input,
+        .toolbar select {
+            padding: 12px;
+            border: 1px solid #ccd4df;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+        }
+
+        .toolbar input { flex: 1; min-width: 180px; }
+        .toolbar select { min-width: 190px; cursor: pointer; }
+
+        button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #123b70;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #d5a52b;
+            color: #123b70;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px #00000015;
+        }
+
+        table {
+            width: 100%;
+            min-width: 850px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+
+        th { background: #123b70; color: white; }
+        tr:hover td { background: #f5f8ff; }
+
+        .event-photo {
+            width: 90px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 7px;
+        }
+
+        .type-badge {
+            background: #eaf2ff;
+            color: #123b70;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        #status {
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+        }
+
+        @media (max-width: 600px) {
+            header { flex-direction: column; }
+            header a { margin: 0 6px; }
+            .toolbar { flex-direction: column; }
+            .toolbar input, .toolbar select { width: 100%; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>College Events</h2>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="addEvent.html">Add Event</a>
+    </nav>
+</header>
+
+<main class="container">
+    <h1>All College Events</h1>
+    <p class="subtitle">View and filter college events</p>
+
+    <div class="toolbar">
+        <input
+            type="search"
+            id="searchInput"
+            placeholder="Search event name or venue..."
+        >
+
+        <select id="typeFilter">
+            <option value="">-- All Event Types --</option>
+            <option value="Technical">Technical Events</option>
+            <option value="Cultural">Cultural Events</option>
+            <option value="Sports">Sports Events</option>
+            <option value="Academic">Academic Events</option>
+            <option value="Workshop">Workshops</option>
+            <option value="Seminar">Seminars</option>
+            <option value="Fest">College Fest</option>
+            <option value="Other">Other Events</option>
+        </select>
+
+        <button onclick="loadEvents()">↻ Refresh</button>
+    </div>
+
+    <p id="status">Loading events...</p>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Photo</th>
+                    <th>Event Name</th>
+                    <th>Event Type</th>
+                    <th>Date</th>
+                    <th>Venue</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody id="eventsTable"></tbody>
+        </table>
+    </div>
+</main>
+
+<script>
+    let allEvents = [];
+
+    async function loadEvents() {
+        const status = document.getElementById("status");
+        status.textContent = "Loading events...";
+
+        try {
+            const response = await fetch("/events");
+
+            if (!response.ok) {
+                throw new Error("Could not load events");
+            }
+
+            allEvents = await response.json();
+            renderEvents();
+        } catch (error) {
+            status.textContent =
+                "Failed to load events. Check server and database.";
+            document.getElementById("eventsTable").innerHTML =
+                '<tr><td colspan="7" class="empty">' +
+                'Please check app.js and db.js.</td></tr>';
+        }
+    }
+
+    function renderEvents() {
+        const searchText =
+            document.getElementById("searchInput").value.toLowerCase().trim();
+
+        const selectedType =
+            document.getElementById("typeFilter").value.toLowerCase();
+
+        const table = document.getElementById("eventsTable");
+        const status = document.getElementById("status");
+
+        table.innerHTML = "";
+
+        const filtered = allEvents.filter(event => {
+            const name = String(event.event_name || "").toLowerCase();
+            const venue = String(event.venue || "").toLowerCase();
+            const type = String(event.event_type || "").toLowerCase();
+
+            return (name.includes(searchText) || venue.includes(searchText))
+                && (!selectedType || type === selectedType);
+        });
+
+        status.textContent = "Events found: " + filtered.length;
+
+        if (filtered.length === 0) {
+            table.innerHTML =
+                '<tr><td colspan="7" class="empty">No events found.</td></tr>';
+            return;
+        }
+
+        filtered.forEach(event => {
+            const row = document.createElement("tr");
+
+            function addCell(value) {
+                const cell = document.createElement("td");
+                cell.textContent = value ?? "";
+                row.appendChild(cell);
+                return cell;
+            }
+
+            addCell(event.event_id);
+
+            const photoCell = addCell("");
+            if (event.photos) {
+                const img = document.createElement("img");
+                img.className = "event-photo";
+                const filename = String(event.photos).replace(/\\/g, "/").split("/").pop();
+                img.src = "/uploads/" + encodeURIComponent(filename);
+                img.alt = "Event photo";
+                img.onerror = () => {
+                    photoCell.textContent = "Photo unavailable";
+                };
+                photoCell.appendChild(img);
+            } else {
+                photoCell.textContent = "No photo";
+            }
+
+            addCell(event.event_name);
+
+            const typeCell = addCell("");
+            const badge = document.createElement("span");
+            badge.className = "type-badge";
+            badge.textContent = event.event_type || "Other";
+            typeCell.appendChild(badge);
+
+            addCell(formatDate(event.date));
+            addCell(event.venue);
+            addCell(event.description);
+            table.appendChild(row);
+        });
+    }
+
+    function formatDate(dateValue) {
+        if (!dateValue) return "";
+        const date = String(dateValue).slice(0, 10);
+        const parts = date.split("-");
+        return parts.length === 3
+            ? parts[2] + "-" + parts[1] + "-" + parts[0]
+            : date;
+    }
+
+    document.getElementById("searchInput")
+        .addEventListener("input", renderEvents);
+
+    document.getElementById("typeFilter")
+        .addEventListener("change", renderEvents);
+
+    loadEvents();
+</script>
+
+</body>
+</html>
+```

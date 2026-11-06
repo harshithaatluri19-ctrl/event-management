@@ -1,0 +1,300 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Event | College Event Management</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eaf2ff, #fff0f0);
+            color: #222;
+        }
+
+        header {
+            background: #123b70;
+            color: white;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h2 { margin: 0; }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        header a:hover { color: #ffd166; }
+
+        .container {
+            max-width: 650px;
+            margin: 45px auto;
+            padding: 0 16px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 6px 25px #00000015;
+        }
+
+        h1 {
+            text-align: center;
+            color: #c62828;
+            margin-top: 0;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin: 15px 0 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccd4df;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .find-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .find-row input { flex: 1; min-width: 0; }
+
+        button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #123b70;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        button:hover { opacity: 0.88; }
+
+        .delete-btn {
+            background: #c62828;
+            width: 100%;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .delete-btn:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        .event-details {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            border: 1px solid #f1caca;
+            border-radius: 10px;
+            background: #fffafa;
+            overflow-wrap: anywhere;
+        }
+
+        .event-details h3 { color: #123b70; }
+
+        .event-details p { line-height: 1.6; }
+
+        #message {
+            text-align: center;
+            margin-top: 18px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            header a { margin: 0 6px; }
+            .card { padding: 22px 16px; }
+            .find-row { flex-direction: column; }
+            .find-row button { width: 100%; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>College Events</h2>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="addEvent.html">Add Event</a>
+        <a href="listEvents.html">View Events</a>
+    </nav>
+</header>
+
+<main class="container">
+    <section class="card">
+        <h1>🗑️ Delete Event</h1>
+        <p class="subtitle">
+            Search for an event before deleting it.
+        </p>
+
+        <label for="eventId">Enter Event ID</label>
+
+        <div class="find-row">
+            <input
+                type="number"
+                id="eventId"
+                min="1"
+                placeholder="Example: 1"
+            >
+            <button type="button" id="findBtn">Find Event</button>
+        </div>
+
+        <div id="eventDetails" class="event-details">
+            <h3 id="eventName"></h3>
+            <p><strong>Event ID:</strong> <span id="detailId"></span></p>
+            <p><strong>Type:</strong> <span id="detailType"></span></p>
+            <p><strong>Date:</strong> <span id="detailDate"></span></p>
+            <p><strong>Venue:</strong> <span id="detailVenue"></span></p>
+            <p><strong>Description:</strong> <span id="detailDescription"></span></p>
+
+            <button type="button" class="delete-btn" id="deleteBtn">
+                Delete This Event
+            </button>
+        </div>
+
+        <p id="message"></p>
+    </section>
+</main>
+
+<script>
+    const message = document.getElementById("message");
+    const eventDetails = document.getElementById("eventDetails");
+    const deleteBtn = document.getElementById("deleteBtn");
+
+    let selectedEventId = null;
+
+    document.getElementById("findBtn").addEventListener("click", findEvent);
+
+    async function findEvent() {
+        const id = document.getElementById("eventId").value.trim();
+
+        selectedEventId = null;
+        eventDetails.style.display = "none";
+        deleteBtn.disabled = false;
+
+        if (!id || Number(id) < 1) {
+            message.style.color = "red";
+            message.textContent = "Please enter a valid Event ID.";
+            return;
+        }
+
+        message.style.color = "#123b70";
+        message.textContent = "Searching for event...";
+
+        try {
+            const response = await fetch("/events/" + encodeURIComponent(id));
+
+            if (!response.ok) {
+                throw new Error("Event not found");
+            }
+
+            const event = await response.json();
+
+            selectedEventId = event.event_id;
+
+            document.getElementById("eventName").textContent =
+                event.event_name || "Untitled Event";
+            document.getElementById("detailId").textContent =
+                event.event_id ?? "";
+            document.getElementById("detailType").textContent =
+                event.event_type || "";
+            document.getElementById("detailDate").textContent =
+                event.date ? String(event.date).slice(0, 10) : "";
+            document.getElementById("detailVenue").textContent =
+                event.venue || "";
+            document.getElementById("detailDescription").textContent =
+                event.description || "";
+
+            eventDetails.style.display = "block";
+            message.style.color = "green";
+            message.textContent =
+                "Event found. Check the details before deleting.";
+        } catch (error) {
+            message.style.color = "red";
+            message.textContent =
+                "Event not found. Please check the ID and try again.";
+        }
+    }
+
+    deleteBtn.addEventListener("click", async function() {
+        if (selectedEventId === null) {
+            message.style.color = "red";
+            message.textContent = "Find an event first.";
+            return;
+        }
+
+        const confirmed = confirm(
+            "Are you sure you want to permanently delete this event?"
+        );
+
+        if (!confirmed) return;
+
+        deleteBtn.disabled = true;
+        message.style.color = "#123b70";
+        message.textContent = "Deleting event...";
+
+        try {
+            const response = await fetch(
+                "/events/" + encodeURIComponent(selectedEventId),
+                { method: "DELETE" }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    result.message || result.error || "Delete failed"
+                );
+            }
+
+            message.style.color = "green";
+            message.textContent =
+                result.message || "Event deleted successfully!";
+
+            eventDetails.style.display = "none";
+            selectedEventId = null;
+            document.getElementById("eventId").value = "";
+        } catch (error) {
+            message.style.color = "red";
+            message.textContent =
+                error.message || "Unable to delete event.";
+            deleteBtn.disabled = false;
+        }
+    });
+</script>
+
+</body>
+</html>
+```

@@ -1,0 +1,917 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Harshitha Event Hub | College Event Management</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f8ff;
+            color: #1d2940;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .navbar {
+            width: 100%;
+            min-height: 76px;
+            padding: 14px 7%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(20, 50, 100, 0.08);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #173b70;
+            font-size: 20px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .logo-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #17447f, #397fe0);
+            color: white;
+            font-size: 25px;
+        }
+
+        .logo small {
+            display: block;
+            font-size: 10px;
+            font-weight: 500;
+            color: #71809a;
+            letter-spacing: 1.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .nav-links a {
+            color: #34435d;
+            font-size: 13px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2875df;
+        }
+
+        .nav-links .nav-button {
+            padding: 10px 17px;
+            background: #2468c9;
+            color: white;
+            border-radius: 9px;
+        }
+
+        .nav-links .nav-button:hover {
+            background: #17447f;
+            color: white;
+        }
+
+        .hero {
+            min-height: 510px;
+            padding: 80px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            background:
+                radial-gradient(circle at 85% 20%,
+                rgba(95, 155, 255, 0.30), transparent 30%),
+                linear-gradient(125deg, #102e59, #1d559a 60%, #347cce);
+            color: white;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 650px;
+            animation: fadeUp 0.9s ease;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            padding: 8px 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 5vw, 58px);
+            line-height: 1.2;
+            margin-bottom: 22px;
+            font-weight: 800;
+        }
+
+        .hero h1 span {
+            color: #ffd778;
+        }
+
+        .hero p {
+            max-width: 570px;
+            color: #e0eaff;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 22px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-primary {
+            background: #ffd778;
+            color: #17345d;
+        }
+
+        .btn-primary:hover {
+            background: #ffca4c;
+        }
+
+        .btn-outline {
+            border: 1px solid rgba(255,255,255,0.6);
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.12);
+        }
+
+        .hero-visual {
+            flex: 0 0 310px;
+            height: 310px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .visual-circle {
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 115px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .floating-card {
+            position: absolute;
+            padding: 13px 17px;
+            border-radius: 13px;
+            background: white;
+            color: #1b3761;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.15);
+        }
+
+        .card-one {
+            top: 30px;
+            right: -5px;
+        }
+
+        .card-two {
+            bottom: 25px;
+            left: -15px;
+        }
+
+        section {
+            padding: 75px 7%;
+        }
+
+        .section-heading {
+            text-align: center;
+            max-width: 650px;
+            margin: 0 auto 42px;
+        }
+
+        .section-heading span {
+            color: #2875df;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .section-heading h2 {
+            color: #18365f;
+            font-size: clamp(25px, 3vw, 34px);
+            margin: 10px 0;
+        }
+
+        .section-heading p {
+            color: #758199;
+            font-size: 14px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid #e8edf6;
+            padding: 28px;
+            border-radius: 18px;
+            transition: 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 15px 35px rgba(30,70,130,0.10);
+            border-color: #c5dcff;
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: #eaf2ff;
+            font-size: 25px;
+            margin-bottom: 18px;
+        }
+
+        .feature-card h3 {
+            font-size: 17px;
+            color: #1b3761;
+            margin-bottom: 9px;
+        }
+
+        .feature-card p {
+            color: #758199;
+            font-size: 13px;
+            margin-bottom: 17px;
+        }
+
+        .feature-card a {
+            color: #2875df;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .management {
+            background: #edf3fc;
+        }
+
+        .management-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+        }
+
+        .management-card {
+            background: white;
+            padding: 24px 14px;
+            text-align: center;
+            border-radius: 16px;
+            border: 1px solid #e0e9f7;
+            transition: 0.3s;
+        }
+
+        .management-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(30,70,130,0.10);
+        }
+
+        .management-card .icon {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .management-card h3 {
+            font-size: 14px;
+            margin-bottom: 14px;
+            color: #1b3761;
+        }
+
+        .management-card a {
+            display: inline-block;
+            background: #edf4ff;
+            color: #2468c9;
+            padding: 8px 12px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .management-card a:hover {
+            background: #2468c9;
+            color: white;
+        }
+
+        .welcome {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 45px;
+            align-items: center;
+        }
+
+        .welcome-visual {
+            min-height: 300px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #dceaff, #a9cbff);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .welcome-visual .big-icon {
+            font-size: 90px;
+            margin-bottom: 10px;
+        }
+
+        .welcome-visual h3 {
+            color: #173b70;
+            font-size: 22px;
+        }
+
+        .welcome-visual p {
+            color: #46648d;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .welcome-content h2 {
+            font-size: 31px;
+            line-height: 1.3;
+            color: #18365f;
+            margin: 12px 0 18px;
+        }
+
+        .welcome-content p {
+            color: #71809a;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .welcome-content .btn {
+            margin-top: 8px;
+            background: #2468c9;
+            color: white;
+        }
+
+        .cta {
+            margin: 0 7% 75px;
+            padding: 45px 30px;
+            border-radius: 22px;
+            text-align: center;
+            color: white;
+            background: linear-gradient(120deg, #173b70, #347cce);
+        }
+
+        .cta h2 {
+            font-size: 27px;
+            margin-bottom: 10px;
+        }
+
+        .cta p {
+            color: #e0eaff;
+            font-size: 14px;
+            margin-bottom: 22px;
+        }
+
+        footer {
+            background: #102644;
+            color: white;
+            padding: 35px 7%;
+            text-align: center;
+        }
+
+        footer h3 {
+            font-size: 21px;
+            margin-bottom: 7px;
+        }
+
+        footer p {
+            color: #c4d2e7;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 18px;
+            margin: 20px 0;
+        }
+
+        .footer-links a {
+            color: #dce8f8;
+            font-size: 12px;
+        }
+
+        .footer-links a:hover {
+            color: #ffd778;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: #edf4ff;
+            border: none;
+            color: #173b70;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 23px;
+            cursor: pointer;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        @media (max-width: 1100px) {
+            .nav-links {
+                gap: 13px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+
+            .management-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .hero-visual {
+                flex-basis: 260px;
+            }
+
+            .visual-circle {
+                width: 220px;
+                height: 220px;
+                font-size: 95px;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .navbar {
+                flex-wrap: wrap;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding-top: 8px;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 12px 5px;
+                font-size: 14px;
+            }
+
+            .nav-links .nav-button {
+                text-align: center;
+                margin-top: 5px;
+            }
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 65px;
+            }
+
+            .hero-content {
+                max-width: 100%;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero-visual {
+                flex-basis: auto;
+                width: 280px;
+                height: 280px;
+            }
+
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .welcome {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .navbar {
+                padding: 12px 5%;
+            }
+
+            .logo {
+                font-size: 16px;
+                gap: 8px;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 22px;
+            }
+
+            .logo small {
+                font-size: 8px;
+                letter-spacing: 1px;
+            }
+
+            .hero {
+                padding: 55px 5%;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 13px;
+            }
+
+            section {
+                padding: 55px 5%;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .management-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .welcome-content h2 {
+                font-size: 26px;
+            }
+
+            .cta {
+                margin: 0 5% 55px;
+                padding: 35px 20px;
+            }
+
+            .cta h2 {
+                font-size: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <a href="/" class="logo">
+            <div class="logo-icon">📅</div>
+            <div>
+                Harshitha Event Hub
+                <small>COLLEGE EVENT MANAGEMENT</small>
+            </div>
+        </a>
+
+        <button class="menu-toggle" id="menuToggle"
+                aria-label="Toggle navigation" aria-expanded="false">
+            ☰
+        </button>
+
+        <nav class="nav-links" id="navLinks">
+            <a href="#home">Home</a>
+            <a href="#features">Features</a>
+            <a href="#management">Manage Events</a>
+            <a href="#about">About</a>
+            <a href="/listEvents.html">View Events</a>
+            <a href="/addEvent.html" class="nav-button">+ Add Event</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <span class="eyebrow">✦ YOUR CAMPUS, YOUR EVENTS</span>
+
+                <h1>
+                    Every Event.<br>
+                    One <span>Smart Hub.</span>
+                </h1>
+
+                <p>
+                    Welcome to Harshitha Event Hub — a simple and smart platform
+                    to create, organize, search, update and manage college events
+                    from one place.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="/addEvent.html" class="btn btn-primary">
+                        + Create an Event
+                    </a>
+
+                    <a href="/listEvents.html" class="btn btn-outline">
+                        Explore Events →
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-visual" aria-label="Calendar illustration">
+                <div class="visual-circle">🎉</div>
+                <div class="floating-card card-one">📅 Plan Your Events</div>
+                <div class="floating-card card-two">✨ Make Memories</div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features">
+            <div class="section-heading reveal">
+                <span>What You Can Do</span>
+                <h2>Everything You Need in One Place</h2>
+                <p>
+                    Manage your college events easily with our convenient
+                    event management features.
+                </p>
+            </div>
+
+            <div class="features">
+                <article class="feature-card reveal">
+                    <div class="feature-icon">➕</div>
+                    <h3>Create Events</h3>
+                    <p>Add new college events with a name, type, date,
+                       venue, description and optional photo.</p>
+                    <a href="/addEvent.html">Add an Event →</a>
+                </article>
+
+                <article class="feature-card reveal">
+                    <div class="feature-icon">📋</div>
+                    <h3>View All Events</h3>
+                    <p>View your event records in an organized list
+                       and quickly find the details you need.</p>
+                    <a href="/listEvents.html">View Events →</a>
+                </article>
+
+                <article class="feature-card reveal">
+                    <div class="feature-icon">🔎</div>
+                    <h3>Search Events</h3>
+                    <p>Find events using available search filters
+                       such as name, event type, date and venue.</p>
+                    <a href="/searchEvent.html">Search Now →</a>
+                </article>
+            </div>
+        </section>
+
+        <!-- Event Management Section -->
+        <section class="management" id="management">
+            <div class="section-heading reveal">
+                <span>Event Administration</span>
+                <h2>Manage Your Events</h2>
+                <p>
+                    Choose an action below to manage your college event records.
+                </p>
+            </div>
+
+            <div class="management-grid">
+                <div class="management-card reveal">
+                    <div class="icon">➕</div>
+                    <h3>Add Event</h3>
+                    <a href="/addEvent.html">Get Started</a>
+                </div>
+
+                <div class="management-card reveal">
+                    <div class="icon">📅</div>
+                    <h3>View Events</h3>
+                    <a href="/listEvents.html">View List</a>
+                </div>
+
+                <div class="management-card reveal">
+                    <div class="icon">🔍</div>
+                    <h3>Search Event</h3>
+                    <a href="/searchEvent.html">Search Now</a>
+                </div>
+
+                <div class="management-card reveal">
+                    <div class="icon">✏️</div>
+                    <h3>Update Event</h3>
+                    <a href="/updateEvent.html">Edit Details</a>
+                </div>
+
+                <div class="management-card reveal">
+                    <div class="icon">🗑️</div>
+                    <h3>Delete Event</h3>
+                    <a href="/deleteEvent.html">Manage Records</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about">
+            <div class="welcome">
+                <div class="welcome-visual reveal">
+                    <div class="big-icon">🎓</div>
+                    <h3>Harshitha Event Hub</h3>
+                    <p>Plan Better. Organize Smarter. Celebrate Together.</p>
+                </div>
+
+                <div class="welcome-content reveal">
+                    <span style="color:#2875df;font-size:12px;font-weight:700;
+                                 letter-spacing:2px;">
+                        ABOUT OUR PROJECT
+                    </span>
+
+                    <h2>Making College Event Management Simple</h2>
+
+                    <p>
+                        Harshitha Event Hub is a College Event Management System
+                        designed to help organize campus events in one convenient
+                        place.
+                    </p>
+
+                    <p>
+                        The application supports event creation, event listing,
+                        searching, updating, deleting and optional photo uploads.
+                        It uses HTML, CSS and JavaScript for the interface,
+                        Node.js and Express for the server, and MySQL to store
+                        event information.
+                    </p>
+
+                    <a href="/listEvents.html" class="btn">
+                        Explore All Events →
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <div class="cta reveal">
+            <h2>Ready to Organize Your Next Event?</h2>
+            <p>Start building memorable campus experiences with Harshitha Event Hub.</p>
+            <a href="/addEvent.html" class="btn btn-primary">
+                + Create Your First Event
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <h3>📅 Harshitha Event Hub</h3>
+        <p>College Event Management System</p>
+
+        <div class="footer-links">
+            <a href="#home">Home</a>
+            <a href="/addEvent.html">Add Event</a>
+            <a href="/listEvents.html">View Events</a>
+            <a href="/searchEvent.html">Search Event</a>
+            <a href="/updateEvent.html">Update Event</a>
+            <a href="/deleteEvent.html">Delete Event</a>
+        </div>
+
+        <p>
+            © <span id="year"></span> Harshitha Event Hub.
+            All rights reserved.
+        </p>
+        <p>Designed for a better campus event experience.</p>
+    </footer>
+
+    <script>
+        // Mobile navigation menu
+        const menuToggle = document.getElementById("menuToggle");
+        const navLinks = document.getElementById("navLinks");
+
+        menuToggle.addEventListener("click", function () {
+            const isOpen = navLinks.classList.toggle("active");
+            menuToggle.setAttribute("aria-expanded", isOpen);
+            menuToggle.textContent = isOpen ? "✕" : "☰";
+        });
+
+        // Close the mobile menu after clicking a link
+        document.querySelectorAll("#navLinks a").forEach(function (link) {
+            link.addEventListener("click", function () {
+                navLinks.classList.remove("active");
+                menuToggle.setAttribute("aria-expanded", "false");
+                menuToggle.textContent = "☰";
+            });
+        });
+
+        // Reveal elements as they enter the screen
+        const revealElements = document.querySelectorAll(".reveal");
+
+        if ("IntersectionObserver" in window) {
+            const observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+
+            revealElements.forEach(function (element) {
+                observer.observe(element);
+            });
+        } else {
+            revealElements.forEach(function (element) {
+                element.classList.add("visible");
+            });
+        }
+
+        // Automatically display the current year
+        document.getElementById("year").textContent =
+            new Date().getFullYear();
+    </script>
+
+</body>
+</html>
+```

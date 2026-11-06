@@ -1,0 +1,362 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Events | College Event Management</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eaf2ff, #fff8e6);
+            color: #222;
+        }
+
+        header {
+            background: #123b70;
+            color: white;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h2 { margin: 0; }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        header a:hover { color: #ffd166; }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 18px;
+        }
+
+        .search-card {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 5px 25px #00000015;
+        }
+
+        h1 {
+            text-align: center;
+            color: #123b70;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 28px;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .field label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccd4df;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+        }
+
+        .field select { cursor: pointer; }
+
+        .buttons {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            padding: 13px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #123b70;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #d5a52b;
+            color: #123b70;
+        }
+
+        .reset-btn { background: #666; }
+
+        #message {
+            text-align: center;
+            margin: 22px 0;
+            font-weight: bold;
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .event-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #00000012;
+            transition: transform 0.2s;
+            overflow-wrap: anywhere;
+        }
+
+        .event-card:hover { transform: translateY(-4px); }
+
+        .event-card h3 {
+            color: #123b70;
+            margin-top: 0;
+        }
+
+        .event-card p { line-height: 1.5; }
+
+        .event-photo {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            background: #eaf2ff;
+            color: #123b70;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            header a { margin: 0 6px; }
+
+            .search-form { grid-template-columns: 1fr; }
+            .buttons { flex-direction: column; }
+            .buttons button { width: 100%; }
+            .search-card { padding: 20px 15px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>College Events</h2>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="addEvent.html">Add Event</a>
+        <a href="listEvents.html">View Events</a>
+    </nav>
+</header>
+
+<main class="container">
+    <section class="search-card">
+        <h1>🔍 Search College Events</h1>
+        <p class="subtitle">Find events using name, category, date or venue</p>
+
+        <form id="searchForm" class="search-form">
+            <div class="field">
+                <label for="event_name">Event Name</label>
+                <input
+                    type="text"
+                    id="event_name"
+                    placeholder="Enter event name"
+                >
+            </div>
+
+            <div class="field">
+                <label for="event_type">Event Type</label>
+                <select id="event_type">
+                    <option value="">-- All Event Types --</option>
+                    <option value="Technical">Technical Events</option>
+                    <option value="Cultural">Cultural Events</option>
+                    <option value="Sports">Sports Events</option>
+                    <option value="Academic">Academic Events</option>
+                    <option value="Workshop">Workshops</option>
+                    <option value="Seminar">Seminars</option>
+                    <option value="Fest">College Fest</option>
+                    <option value="Other">Other Events</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="event_date">Event Date</label>
+                <input type="date" id="event_date">
+            </div>
+
+            <div class="field">
+                <label for="venue">Venue</label>
+                <input type="text" id="venue" placeholder="Enter venue">
+            </div>
+
+            <div class="buttons">
+                <button type="submit">Search Events</button>
+                <button type="reset" class="reset-btn">Clear Filters</button>
+            </div>
+        </form>
+    </section>
+
+    <p id="message">Loading events...</p>
+    <section id="results" class="results"></section>
+</main>
+
+<script>
+    let allEvents = [];
+
+    const form = document.getElementById("searchForm");
+    const message = document.getElementById("message");
+    const results = document.getElementById("results");
+
+    async function loadEvents() {
+        try {
+            const response = await fetch("/events");
+
+            if (!response.ok) {
+                throw new Error("Could not load events");
+            }
+
+            allEvents = await response.json();
+            message.textContent = "Enter your search filters above.";
+            showEvents(allEvents);
+        } catch (error) {
+            message.textContent =
+                "Unable to load events. Check that app.js is running.";
+        }
+    }
+
+    function showEvents(events) {
+        results.replaceChildren();
+        message.textContent = "Events found: " + events.length;
+
+        if (events.length === 0) {
+            message.textContent = "No matching events found.";
+            return;
+        }
+
+        events.forEach(event => {
+            const card = document.createElement("article");
+            card.className = "event-card";
+
+            if (event.photos) {
+                const img = document.createElement("img");
+                const filename = String(event.photos)
+                    .replace(/\\/g, "/")
+                    .split("/")
+                    .pop();
+
+                img.src = "/uploads/" + encodeURIComponent(filename);
+                img.alt = "Event photo";
+                img.className = "event-photo";
+
+                img.onerror = () => img.remove();
+                card.appendChild(img);
+            }
+
+            const title = document.createElement("h3");
+            title.textContent = event.event_name || "Untitled Event";
+            card.appendChild(title);
+
+            const badge = document.createElement("span");
+            badge.className = "type-badge";
+            badge.textContent = event.event_type || "Other";
+            card.appendChild(badge);
+
+            addDetail(card, "Event ID", event.event_id);
+            addDetail(card, "Date", formatDate(event.date));
+            addDetail(card, "Venue", event.venue);
+            addDetail(card, "Description", event.description);
+
+            results.appendChild(card);
+        });
+    }
+
+    function addDetail(card, label, value) {
+        const p = document.createElement("p");
+        const strong = document.createElement("strong");
+        strong.textContent = label + ": ";
+        p.appendChild(strong);
+        p.appendChild(document.createTextNode(value ?? ""));
+        card.appendChild(p);
+    }
+
+    function formatDate(value) {
+        if (!value) return "";
+        const parts = String(value).slice(0, 10).split("-");
+        return parts.length === 3
+            ? parts[2] + "-" + parts[1] + "-" + parts[0]
+            : String(value);
+    }
+
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const name = document.getElementById("event_name")
+            .value.trim().toLowerCase();
+        const type = document.getElementById("event_type")
+            .value.toLowerCase();
+        const date = document.getElementById("event_date").value;
+        const venue = document.getElementById("venue")
+            .value.trim().toLowerCase();
+
+        const filtered = allEvents.filter(event => {
+            const eventName = String(event.event_name || "").toLowerCase();
+            const eventType = String(event.event_type || "").toLowerCase();
+            const eventVenue = String(event.venue || "").toLowerCase();
+            const eventDate = event.date
+                ? String(event.date).slice(0, 10)
+                : "";
+
+            return eventName.includes(name)
+                && (!type || eventType === type)
+                && (!date || eventDate === date)
+                && eventVenue.includes(venue);
+        });
+
+        showEvents(filtered);
+    });
+
+    form.addEventListener("reset", function() {
+        setTimeout(() => showEvents(allEvents), 0);
+    });
+
+    loadEvents();
+</script>
+
+</body>
+</html>
+```

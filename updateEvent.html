@@ -1,0 +1,288 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Event | College Event Management</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eaf2ff, #fff8e6);
+            color: #222;
+        }
+
+        header {
+            background: #123b70;
+            color: white;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h2 { margin: 0; }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        header a:hover { color: #ffd166; }
+
+        .container {
+            max-width: 700px;
+            margin: 35px auto;
+            padding: 0 16px;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 5px 25px #00000015;
+        }
+
+        h1 {
+            text-align: center;
+            color: #123b70;
+            margin-top: 0;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccd4df;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #123b70;
+        }
+
+        .find-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .find-row input { flex: 1; min-width: 0; }
+
+        button {
+            padding: 12px 18px;
+            background: #123b70;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #d5a52b;
+            color: #123b70;
+        }
+
+        .update-btn {
+            width: 100%;
+            margin-top: 24px;
+            font-weight: bold;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 18px;
+            font-weight: bold;
+        }
+
+        #editForm { display: none; }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            header a { margin: 0 6px; }
+            .card { padding: 22px 16px; }
+            .find-row { flex-direction: column; }
+            .find-row button { width: 100%; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>College Events</h2>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="addEvent.html">Add Event</a>
+        <a href="listEvents.html">View Events</a>
+    </nav>
+</header>
+
+<main class="container">
+    <section class="card">
+        <h1>✏️ Update Event</h1>
+        <p class="subtitle">Find an event by ID and update its details</p>
+
+        <label for="searchId">Enter Event ID</label>
+        <div class="find-row">
+            <input
+                type="number"
+                id="searchId"
+                min="1"
+                placeholder="Example: 1"
+                required
+            >
+            <button type="button" id="findBtn">Find Event</button>
+        </div>
+
+        <p id="message"></p>
+
+        <form id="editForm" enctype="multipart/form-data">
+            <label for="event_id">Event ID</label>
+            <input type="number" id="event_id" name="event_id" readonly>
+
+            <label for="event_name">Event Name</label>
+            <input type="text" id="event_name" name="event_name" required>
+
+            <label for="event_type">Event Type</label>
+            <select id="event_type" name="event_type" required>
+                <option value="">-- Select Event Type --</option>
+                <option value="Technical">Technical Events</option>
+                <option value="Cultural">Cultural Events</option>
+                <option value="Sports">Sports Events</option>
+                <option value="Academic">Academic Events</option>
+                <option value="Workshop">Workshops</option>
+                <option value="Seminar">Seminars</option>
+                <option value="Fest">College Fest</option>
+                <option value="Other">Other Events</option>
+            </select>
+
+            <label for="date">Event Date</label>
+            <input type="date" id="date" name="date" required>
+
+            <label for="venue">Venue</label>
+            <input type="text" id="venue" name="venue" required>
+
+            <label for="description">Description</label>
+            <textarea id="description" name="description"
+                      rows="4" required></textarea>
+
+            <label for="photos">Change Event Photo (optional)</label>
+            <input type="file" id="photos" name="photos" accept="image/*">
+
+            <button type="submit" class="update-btn">Save Changes</button>
+        </form>
+    </section>
+</main>
+
+<script>
+    const message = document.getElementById("message");
+    const editForm = document.getElementById("editForm");
+
+    document.getElementById("findBtn").addEventListener("click", findEvent);
+
+    async function findEvent() {
+        const id = document.getElementById("searchId").value.trim();
+
+        if (!id || Number(id) < 1) {
+            message.style.color = "red";
+            message.textContent = "Please enter a valid Event ID.";
+            editForm.style.display = "none";
+            return;
+        }
+
+        message.style.color = "#123b70";
+        message.textContent = "Searching...";
+        editForm.style.display = "none";
+
+        try {
+            const response = await fetch("/events/" + encodeURIComponent(id));
+
+            if (!response.ok) {
+                throw new Error("Event not found");
+            }
+
+            const event = await response.json();
+
+            document.getElementById("event_id").value = event.event_id;
+            document.getElementById("event_name").value = event.event_name || "";
+            document.getElementById("event_type").value = event.event_type || "";
+            document.getElementById("date").value =
+                event.date ? String(event.date).slice(0, 10) : "";
+            document.getElementById("venue").value = event.venue || "";
+            document.getElementById("description").value =
+                event.description || "";
+
+            document.getElementById("photos").value = "";
+            editForm.style.display = "block";
+            message.style.color = "green";
+            message.textContent = "Event found! Edit the details below.";
+        } catch (error) {
+            message.style.color = "red";
+            message.textContent =
+                "Event not found or server error. Check the Event ID.";
+        }
+    }
+
+    editForm.addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const id = document.getElementById("event_id").value;
+        const formData = new FormData(editForm);
+
+        message.style.color = "#123b70";
+        message.textContent = "Updating event...";
+
+        try {
+            const response = await fetch("/events/" + encodeURIComponent(id), {
+                method: "PUT",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    result.message || result.error || "Update failed"
+                );
+            }
+
+            message.style.color = "green";
+            message.textContent =
+                result.message || "Event updated successfully!";
+        } catch (error) {
+            message.style.color = "red";
+            message.textContent =
+                error.message || "Unable to update event.";
+        }
+    });
+</script>
+
+</body>
+</html>
+```

@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Event | College Event Management</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eaf2ff, #fff8e6);
+            color: #222;
+        }
+
+        .header {
+            background: #123b70;
+            padding: 18px 5%;
+            color: white;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            color: white;
+            text-decoration: none;
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 18px;
+        }
+
+        nav a:hover {
+            color: #ffd166;
+        }
+
+        .event-form {
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px #00000018;
+            box-sizing: border-box;
+        }
+
+        .event-form h2 {
+            text-align: center;
+            color: #123b70;
+            margin-bottom: 25px;
+        }
+
+        .event-form label {
+            display: block;
+            margin: 16px 0 7px;
+            font-weight: bold;
+        }
+
+        .event-form input,
+        .event-form select,
+        .event-form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccd4df;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 15px;
+            background: #fff;
+        }
+
+        .event-form input:focus,
+        .event-form select:focus,
+        .event-form textarea:focus {
+            outline: none;
+            border-color: #123b70;
+            box-shadow: 0 0 5px #123b7040;
+        }
+
+        .event-form select {
+            cursor: pointer;
+        }
+
+        .event-form button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            background: #123b70;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .event-form button:hover {
+            background: #d5a52b;
+            color: #123b70;
+            transform: translateY(-2px);
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #123b70;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            .event-form {
+                margin: 20px 12px;
+                padding: 22px 16px;
+            }
+
+            .navbar {
+                flex-direction: column;
+            }
+
+            nav a {
+                margin: 0 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="navbar">
+        <a href="index.html" class="logo">College Events</a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="listEvents.html">View Events</a>
+        </nav>
+    </div>
+</header>
+
+<main class="event-form">
+
+    <h2>➕ Add New College Event</h2>
+
+    <form id="eventForm" enctype="multipart/form-data">
+
+        <label for="event_id">Event ID</label>
+        <input
+            type="number"
+            id="event_id"
+            name="event_id"
+            placeholder="Enter unique event ID"
+            min="1"
+            required
+        >
+
+        <label for="event_name">Event Name</label>
+        <input
+            type="text"
+            id="event_name"
+            name="event_name"
+            placeholder="Enter event name"
+            required
+        >
+
+        <label for="event_type">Event Type</label>
+        <select id="event_type" name="event_type" required>
+            <option value="" disabled selected>-- Select Event Type --</option>
+            <option value="Technical">Technical Events</option>
+            <option value="Cultural">Cultural Events</option>
+            <option value="Sports">Sports Events</option>
+            <option value="Academic">Academic Events</option>
+            <option value="Workshop">Workshops</option>
+            <option value="Seminar">Seminars</option>
+            <option value="Fest">College Fest</option>
+            <option value="Other">Other Events</option>
+        </select>
+
+        <label for="date">Event Date</label>
+        <input
+            type="date"
+            id="date"
+            name="date"
+            required
+        >
+
+        <label for="venue">Venue</label>
+        <input
+            type="text"
+            id="venue"
+            name="venue"
+            placeholder="Enter event venue"
+            required
+        >
+
+        <label for="description">Event Description</label>
+        <textarea
+            id="description"
+            name="description"
+            rows="4"
+            placeholder="Describe the event..."
+            required
+        ></textarea>
+
+        <label for="photos">Upload Event Photo</label>
+        <input
+            type="file"
+            id="photos"
+            name="photos"
+            accept="image/*"
+        >
+
+        <button type="submit">Save Event</button>
+
+        <p id="message"></p>
+
+    </form>
+
+    <a href="index.html" class="back-link">← Back to Home</a>
+
+</main>
+
+<script>
+    const eventForm = document.getElementById("eventForm");
+    const message = document.getElementById("message");
+
+    eventForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(eventForm);
+        message.style.color = "#123b70";
+        message.textContent = "Saving event...";
+
+        try {
+            const response = await fetch("/events", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                message.style.color = "green";
+                message.textContent =
+                    result.message || "Event added successfully!";
+                eventForm.reset();
+            } else {
+                message.style.color = "red";
+                message.textContent =
+                    result.message || result.error ||
+                    "Unable to add event. Check the details.";
+            }
+        } catch (error) {
+            message.style.color = "red";
+            message.textContent =
+                "Server connection failed. Please check app.js.";
+        }
+    });
+</script>
+
+</body>
+</html>
+```
